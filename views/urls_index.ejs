@@ -4,13 +4,14 @@
   <title>TinyApp</title>
 </head>
 <body>
-    <% include partials/_header %>
+  <% include partials/_header %>
+  <br>
   <% for (var i in urls) { %>
     <span>
       <%= `${i} → ${urls[i]}` %>
       <a href="/urls/<%=i%>">edit</a>
       <form method="POST" action="/urls/<%= i %>/delete">
-        <br><input type="submit" value="Delete" ></input>
+        <input type="submit" value="Delete" ></input>
       </form>
     </span>
     <br><br>

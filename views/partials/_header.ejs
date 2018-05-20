@@ -1,12 +1,18 @@
 <header>
-  <form action="/login" method="post">
-  Username:<br>
-  <input type="text" name="username" value="">
-  <br>
-  Password:<br>
-  <input type="password" name="password" value="">
-  <br><br>
-  <input type="submit" value="Submit">
-  <br><br>
+  <% if (username) {%>
+    <h2>Hello <%=username %></h2>
+    <form action="/logout" method="post">
+    <input type="submit" value="Log the H*ck out">
+    </form>
+    <!-- also display logout form -->
+  <% } else { %>
+    <form action="/login" method="post">
+      Username:<input type="text" name="username" value="">
+      Password:<input type="password" name="password" value="">
+      <input type="submit" value="Log the H*ck In">
+    </form>
+    (<a href='/register'>or register</a>, you new person you)
+  <% } %>
+  <hr />
 </header>
 
