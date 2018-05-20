@@ -1,8 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>TinyApp</title>
-</head>
-<body>
-</body>
-</html>
+<header>
+  <% if (username) {%>
+    <h2>Hello <%=username %></h2>
+    <form action="/logout" method="post">
+    <input type="submit" value="Log the H*ck out">
+    </form>
+    <!-- also display logout form -->
+  <% } else { %>
+    <form action="/login" method="post">
+      Username:<input type="text" name="username" value="">
+      Password:<input type="password" name="password" value="">
+      <input type="submit" value="Log the H*ck In">
+    </form>
+    (<a href='/register'>or register</a>, you new person you)
+  <% } %>
+  <hr />
+</header>
+
