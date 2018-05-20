@@ -16,7 +16,18 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+}
 
 // helper functions go here
 function generateRandomString() {
@@ -62,7 +73,6 @@ app.get("/urls/new", (req, res) => {
   let templateVars = {
     username: username
   };
-  // todo: pass username through to the tempalte, I guess/1?!?!?!?!?!11eleven
   res.render("urls_new", templateVars);
 });
 
@@ -116,6 +126,10 @@ app.post ("/logout", (req, res) => {
   res.redirect("urls");
 });
 
+app.get ("/register", (req, res) => {
+  let username = req.body.username;
+  res.render("urls_register");
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
