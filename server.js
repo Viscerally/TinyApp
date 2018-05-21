@@ -7,7 +7,7 @@ var PORT = process.env.PORT || 8080; // default port 8080
 
 app.use(cookieParser())
 app.set("view engine", "ejs");
-app.use(bodyParser.urlencoded({extended: true})); // wires up Body Parser middleware
+app.use(bodyParser.urlencoded({ extended: true })); // wires up Body Parser middleware
 
 
 // databases
@@ -16,7 +16,18 @@ var urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
-
+const users = {
+  "userRandomID": {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur"
+  },
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk"
+  }
+}
 
 // helper functions go here
 function generateRandomString() {
@@ -27,6 +38,10 @@ function generateRandomString() {
     newStr += stringOptions.charAt(Math.floor(Math.random() * stringOptions.length));
   }
   return newStr;
+}
+
+function lookUpUserObject(userId) {
+  return users[userId]
 }
 
 // de facto "home page"; will change later
@@ -43,8 +58,12 @@ app.get("/", (req, res) => {
 // routes for /urls etc
 
 app.get("/urls", (req, res) => {
-  let username = req.cookies.username
-  console.log(username);
+  let username;
+  if (req.cookies.user_id) {
+    let userObject = lookUpUserObject(req.cookies.user_id);
+    username = userObject.email;
+  }
+
   let templateVars = {
     urls: urlDatabase,
     username: username
@@ -58,22 +77,21 @@ app.get("/urls", (req, res) => {
 
 
 app.get("/urls/new", (req, res) => {
-  let username = req.cookies.username
-  let templateVars = {
-    username: username
-  };
-  // todo: pass username through to the tempalte, I guess/1?!?!?!?!?!11eleven
+  let templateVars = req.cookies;
   res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
-  let username = req.cookies.username
+  if (req.cookies.user_id) {
+    let userObject = lookUpUserObject(req.cookies.user_id);
+    let username = userObject.email;
+  }
   let shortURL = req.params.id;
   let regularURL = urlDatabase[shortURL];
   let templateVars = {
     username: username,
     shortURL: shortURL,
-    regularURL: regularURL 
+    regularURL: regularURL
   };
   console.log(templateVars.regularURL);
   res.render("urls_show", templateVars);
@@ -104,18 +122,59 @@ app.get("/u/:shortURL", (req, res) => {
 
 // routes for login/register/logout
 
-app.post("/login", (req, res) => {
-  let username = req.body.username;
-  res.cookie("username", username);
-  res.redirect("/urls");
+app.get("/login", (req, res) => {
+  res.render("urls_login")
 });
 
-app.post ("/logout", (req, res) => {
+app.post("/login", (req, res) => {
+  console.log('REQ.body', req.body)
   let username = req.body.username;
-  res.clearCookie("username", username);
+  let password = req.body.password;
+
+  //find in users object where email is === username
+  let foundUser = null; 
+console.log('USERS', users)
+  for (const user in users) {
+   if (users[user].email === username){
+     foundUser = users[user]
+   }  
+  }
+  if (foundUser === null) {
+    res.status(403).send("No matching email")
+  } else {
+    res.cookie("user_id", foundUser.id);
+    res.redirect("/urls");
+  }
+
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("user_id")
   res.redirect("urls");
 });
 
+app.get("/register", (req, res) => {
+  let username = req.body.username;
+  res.render("urls_register");
+});
+
+app.post("/register", (req, res) => {
+  let password = req.body.password;
+  let userId = generateRandomString();
+  let username = req.body.username;
+  if (username === "" || password === "") {
+    res.status(400).send("ERROR: 400 \n You didn't enter a username or password you goomba")
+  }
+  let userObject = {
+    id: userId,
+    email: username,
+    password: password
+  };
+  users[userId] = userObject;
+
+  res.cookie("user_id", userId);
+  res.redirect("/urls");
+});
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
