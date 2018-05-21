@@ -127,9 +127,25 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
+  console.log('REQ.body', req.body)
   let username = req.body.username;
-  res.cookie("username", username);
-  res.redirect("/urls");
+  let password = req.body.password;
+
+  //find in users object where email is === username
+  let foundUser = null; 
+console.log('USERS', users)
+  for (const user in users) {
+   if (users[user].email === username){
+     foundUser = users[user]
+   }  
+  }
+  if (foundUser === null) {
+    res.status(403).send("No matching email")
+  } else {
+    res.cookie("user_id", foundUser.id);
+    res.redirect("/urls");
+  }
+
 });
 
 app.post("/logout", (req, res) => {
