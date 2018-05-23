@@ -57,16 +57,11 @@ app.get("/", (req, res) => {
 
 // routes for /urls etc
 
-app.get("/urls", (req, res) => {
-  let username;
-  if (req.cookies.user_id) {
-    let userObject = lookUpUserObject(req.cookies.user_id);
-    username = userObject.email;
-  }
-
+app.get("/urls", (req, res) => {  
+let userObject = lookUpUserObject(req.cookies.user_id);
   let templateVars = {
     urls: urlDatabase,
-    username: username
+    user: userObject,
   };
   res.render("urls_index", templateVars);
 });
@@ -77,19 +72,25 @@ app.get("/urls", (req, res) => {
 
 
 app.get("/urls/new", (req, res) => {
-  let templateVars = req.cookies;
+  //check for cookies; if cookies empty -> redirect to login else cookie will be set b/c not falsey  
+  // if (req.cookies === false) {
+    // res.redirect("urls/login")
+  // } else {
+    let userObject = lookUpUserObject(req.cookies.user_id);
+    let templateVars = {
+      user: userObject};
+  
   res.render("urls_new", templateVars);
+  // };
 });
 
 app.get("/urls/:id", (req, res) => {
-  if (req.cookies.user_id) {
-    let userObject = lookUpUserObject(req.cookies.user_id);
-    let username = userObject.email;
-  }
+  var userObject = lookUpUserObject(req.cookies.user_id); 
+  
   let shortURL = req.params.id;
   let regularURL = urlDatabase[shortURL];
   let templateVars = {
-    username: username,
+    user: userObject,
     shortURL: shortURL,
     regularURL: regularURL
   };
