@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // wires up Body Parser midd
 // databases
 var urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  "9sm5xK": "http://www.google.com",
 };
 
 const users = {
@@ -66,13 +66,12 @@ let userObject = lookUpUserObject(req.cookies.user_id);
   res.render("urls_index", templateVars);
 });
 
-// app.get("/urls.json", (req, res) => {
-//   res.json(urlDatabase);
-// });
+
+
 
 
 app.get("/urls/new", (req, res) => {
-  //check for cookies; if cookies empty -> redirect to login else cookie will be set b/c not falsey  
+  //check for cookies; if cookies empty -> redirect to login else cookie will be set b/c not "falsy"  
   // if (req.cookies === false) {
     // res.redirect("urls/login")
   // } else {
@@ -85,7 +84,7 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  var userObject = lookUpUserObject(req.cookies.user_id); 
+  let userObject = lookUpUserObject(req.cookies.user_id); 
   
   let shortURL = req.params.id;
   let regularURL = urlDatabase[shortURL];
@@ -98,17 +97,18 @@ app.get("/urls/:id", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-
+////////deletes urls
 app.post("/urls/:id/delete", (req, res) => {
-  var short = req.params.id
+  let short = req.params.id
   delete urlDatabase[short];
   res.redirect("/urls");
 });
-
-app.post("/urls/:id", (req, res) => {
-  var shortUrl = req.params.id;
-  var longUrl = req.body.longURL;
+// adds url to 'database object'
+app.post("/urls", (req, res) => {
+  let shortUrl = generateRandomString();
+  let longUrl = req.body.longURL;
   urlDatabase[shortUrl] = longUrl;
+  console.log(urlDatabase);
   res.redirect("/urls");
 });
 
