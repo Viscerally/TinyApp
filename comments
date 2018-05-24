@@ -12,4 +12,15 @@ At that point, login/logout should be pretty workin', like a workin' ol thang
 
 modify object to add new URL that user inputs in post request on "urls/new"
 
-//
+//refactor get/post for /urls ==> do the same for all references to urldatabase
+// append with if condition and object access let userObject = lookUpUserObject(req.cookies.user_id);
+if (userObject){
+  var urls;
+  var id = userObject.id;  
+  if(urlDatabase[id]){ 
+    urls = urlDatabase[id];
+  }
+  let templateVars = {
+    urls: urls,
+    user: userObject,
+  };
