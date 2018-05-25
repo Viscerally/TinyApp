@@ -1,7 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser"); // pulls the body parser middleware library
-const cookieParser = require('cookie-parser');
-
+const cookieSession = require('cookie-session')
 const bcrypt = require('bcrypt');
 // const password = ""; // you will probably this from req.params
 
@@ -9,7 +8,15 @@ const bcrypt = require('bcrypt');
 var app = express();
 var PORT = process.env.PORT || 8080; // default port 8080
 
-app.use(cookieParser())
+
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key'],
+
+  // Cookie Options
+  maxAge: 24 * 60 * 60 * 1000 // 24 hours
+}))
+
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true })); // wires up Body Parser middleware
 
@@ -67,7 +74,7 @@ app.get("/", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
-  let userObject = lookUpUserObject(req.cookies.user_id);
+  let userObject = lookUpUserObject(req.session.user_id);
   // console.log("we are in /urls");
   if (userObject) {
     var urls;
@@ -90,7 +97,7 @@ app.get("/urls", (req, res) => {
 
 
 app.get("/urls/new", (req, res) => {
-  let userObject = lookUpUserObject(req.cookies.user_id);
+  let userObject = lookUpUserObject(req.session.user_id);
   if (userObject) {
     var urls;
     var id = userObject.id;
@@ -111,7 +118,7 @@ app.get("/urls/new", (req, res) => {
   });
   
   app.post("/urls/:id", (req, res) => {
-    let userObject = lookUpUserObject(req.cookies.user_id);
+    let userObject = lookUpUserObject(req.session.user_id);
     if (userObject) {
       var urls;
       var id = userObject.id;
@@ -128,8 +135,8 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.get("/urls/:id", (req, res) => {
-  console.log("we came from urls/id")
-  let userObject = lookUpUserObject(req.cookies.user_id);
+  // console.log("we came from urls/id")
+  let userObject = lookUpUserObject(req.session.user_id);
   if (userObject) {
     var urls;
     var id = userObject.id;
@@ -153,7 +160,7 @@ app.get("/urls/:id", (req, res) => {
 
 ////////deletes urls
 app.post("/urls/:id/delete", (req, res) => {
-  let userObject = lookUpUserObject(req.cookies.user_id);
+  let userObject = lookUpUserObject(req.session.user_id);
   
   if (userObject) {
     var id = userObject.id;
@@ -167,7 +174,7 @@ app.post("/urls/:id/delete", (req, res) => {
 });
 // adds url to 'database object'
 app.post("/urls", (req, res) => {
-  let userObject = lookUpUserObject(req.cookies.user_id);
+  let userObject = lookUpUserObject(req.session.user_id);
   
   if (userObject) {
     let shortUrl = generateRandomString();
@@ -208,14 +215,14 @@ app.post("/login", (req, res) => {
   if (foundUser === null) {
     res.status(403).send("No matching email")
   } else {
-    res.cookie("user_id", foundUser.id);
+    res.session.user_id = "user_id", foundUser.id;
     res.redirect("/urls");
   }
   
 });
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("user_id")
+  req.session = null;
   res.redirect("urls");
 });
 
@@ -225,7 +232,6 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  
   let password = req.body.password;
   const hashedPassword = bcrypt.hashSync(password, 10); //turns password into hashed password
   // bcrypt.compareSync("123", hashedPassword);
@@ -241,8 +247,9 @@ app.post("/register", (req, res) => {
     password: hashedPassword
   };
   users[userId] = userObject;
-  console.log(users);
-  res.cookie("user_id", userId);
+    // console.log(users);
+  // res.cookie("user_id", userId);
+  req.session.user_id = userId;
   res.redirect("/urls");
 });
 
