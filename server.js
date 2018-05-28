@@ -59,13 +59,9 @@ function lookUpUserObject(userId) {
   return users[userId]
 }
 
-// de facto "home page"; will change later
+// de facto "home page"; 
 app.get("/", (req, res) => {
-  res.end(
-    "<html><body> Hello! Welcome to Tiny App!  <br />" +
-    "<a href='/login'>LOGIN</a> <br />" +
-    "<a href='/register'>REGISTER</a></body></html>"
-  );
+  res.render("urls_home");
 });
 
 
