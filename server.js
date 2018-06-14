@@ -15,7 +15,7 @@ var PORT = process.env.PORT || 8080; // default port 8080
 app.use(cookieSession({
   name: 'session',
   keys: ['key'],
-  
+
   // Cookie Options
   maxAge: 24 * 60 * 60 * 1000 // 24 hours
 }))
@@ -252,7 +252,6 @@ app.get("/register", (req, res) => {
 app.post("/register", (req, res) => {
   let password = req.body.password;
   const hashedPassword = bcrypt.hashSync(password, 10); //turns password into hashed password
-  // bcrypt.compareSync("123", hashedPassword);
 
   var userId = generateRandomString();
   var username = req.body.username;
@@ -265,9 +264,6 @@ app.post("/register", (req, res) => {
     password: hashedPassword
   };
   users[userId] = userObject;
-
-  // console.log(users);
-  // res.cookie("user_id", userId);
   req.session.user_id = userId;
   res.redirect("/urls");
 });
@@ -285,7 +281,7 @@ app.get("/u/:shortURL", (req, res) => {
   if (longUrl) {
     res.redirect("http://" + longUrl); //this will redirect to "http://localhost:8080/u/www.bikes.com" which is a relative domain 
   }
-  console.log("this is the longUrl", urlDatabase); 
+  console.log("this is the longUrl", urlDatabase);
   res.status(404).send("Page not found");
 });
 

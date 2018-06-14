@@ -14,6 +14,6 @@ http://localhost:8080/u/086mL doesn't work.
 ```
  this should redirect to the url entered. It looks like the code for that is completely commented out. This is the main feature and should be functional before submitting.
 
-- [ ] Add in morgan npm to log request data
+- [x] Add in morgan npm to log request data
 
 ```
