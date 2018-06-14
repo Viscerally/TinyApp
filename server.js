@@ -186,6 +186,7 @@ app.post("/urls/:id/delete", (req, res) => {
     res.redirect("/urls/register");
   };
 });
+
 // adds url to 'database object'
 app.post("/urls", (req, res) => {
   let userObject = lookUpUserObject(req.session.user_id);
@@ -216,13 +217,11 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  // bcrypt.compareSync(password, hashedPassword);
   let username = req.body.username;
   let password = req.body.password;
 
   //find in users object where email is === username
   let foundUser = null;
-  // console.log('USERS', users)
   for (const user in users) {
     if (users[user].email === username) {
       if (bcrypt.compareSync(password, users[user].password)) {
@@ -245,7 +244,6 @@ app.post("/logout", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  // let username = req.body.username;
   res.render("urls_register");
 });
 

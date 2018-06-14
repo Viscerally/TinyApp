@@ -9,8 +9,9 @@
   <br>
   <% for (var i in urls) { %>
     <span>
-      <%= `${i} → ${urls[i]}` %>
-      <a href="/urls/<%=i%>" class="btn btn-warning">edit</a>
+      <%=`${i} → ${urls[i]}` %>
+      <a href="http://localhost:8080/u/<%=i%>"  class="btn btn-primary"> Go</a>
+      <a href="/urls/<%=i%>" class="btn btn-warning">Edit</a>
       <form method="POST" action="/urls/<%= i %>/delete">
         <input class="btn btn-danger" type="submit" value="Delete" ></input>
       </form>
