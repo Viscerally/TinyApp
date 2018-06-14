@@ -9,7 +9,7 @@
   <br>
   <% for (var i in urls) { %>
     <span>
-      <%=`${i} → ${urls[i]}` %>
+      <%=`http://localhost:8080/u/${i} → ${urls[i]}` %>
       <a href="http://localhost:8080/u/<%=i%>"  class="btn btn-primary"> Go</a>
       <a href="/urls/<%=i%>" class="btn btn-warning">Edit</a>
       <form method="POST" action="/urls/<%= i %>/delete">
