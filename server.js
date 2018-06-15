@@ -173,7 +173,7 @@ app.post("/urls", (req, res) => {
   let userObject = lookUpUserObject(req.session.user_id);
   let longUrl = req.body.longURL;
   let shortUrl = generateRandomString();
-  console.log(userObject);
+
   if (userObject.id in urlDatabase) {
     urlDatabase[userObject.id][shortUrl] = longUrl;
   }
