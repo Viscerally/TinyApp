@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser"); // pulls the body parser middleware library
 const cookieSession = require('cookie-session')
 const bcrypt = require('bcrypt');
-// const morgan = require('morgan');
+const morgan = require('morgan');
 
 
 
@@ -23,7 +23,7 @@ app.use(cookieSession({
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true })); // wires up Body Parser middleware
 
-// app.use(morgan('combined')); //wires up morgan to log req details
+app.use(morgan(':remote-addr :remote-user :method :url HTTP/:http-version :status :res[content-length] - :response-time ms')); //wires up morgan to log req details
 
 // databases
 var urlDatabase = {
