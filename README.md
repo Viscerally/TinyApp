@@ -1,5 +1,5 @@
 # TinyApp
-TinyApp is a full stack web app 
+TinyApp is a full stack web app built using Node and Express that allows users to shorten a long URL to something shorter and more concise. 
 
 
 ## Screenshots

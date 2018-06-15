@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser"); // pulls the body parser middleware library
 const cookieSession = require('cookie-session')
 const bcrypt = require('bcrypt');
-const morgan = require('morgan');
+// const morgan = require('morgan');
 
 
 
@@ -23,7 +23,7 @@ app.use(cookieSession({
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true })); // wires up Body Parser middleware
 
-app.use(morgan('combined')); //wires up morgan to log req details
+// app.use(morgan('combined')); //wires up morgan to log req details
 
 // databases
 var urlDatabase = {
@@ -34,22 +34,6 @@ var urlDatabase = {
   //   "9sm5xK": "http://www.google.com"
   // }
 };
-
-// var tempDatabase = {
-//   "b2xVn2": {
-//     "longUrl": "http://www.lighthouselabs.ca",
-//     "user_id": "userRandomID"
-//   },
-//   "9sm5xK": {
-//     "longUrl": "http://www.google.com",
-//     "user_id": "userRandomID"
-//   },
-//   "4353ccc": {
-//     "longUrl": "http://www.facebook.com",
-//     "user_id": "userID3"
-//   }
-
-// };
 
 const users = {
   "userRandomID": {
@@ -123,9 +107,6 @@ app.get("/urls/new", (req, res) => {
       urls: urls,
       user: userObject,
     };
-    // let userObject = lookUpUserObject(req.cookies.user_id);
-    // let templateVars = {
-    // user: userObject};
     res.render("urls_new", templateVars);
   } else {
     res.redirect("/urls/register");
@@ -190,17 +171,21 @@ app.post("/urls/:id/delete", (req, res) => {
 // adds url to 'database object'
 app.post("/urls", (req, res) => {
   let userObject = lookUpUserObject(req.session.user_id);
-
-  if (userObject) {
-    let shortUrl = generateRandomString();
-    let longUrl = req.body.longURL;
-    urlDatabase[userObject.id] = {};
+  let longUrl = req.body.longURL;
+  let shortUrl = generateRandomString();
+  console.log(userObject);
+  if (userObject.id in urlDatabase) {
     urlDatabase[userObject.id][shortUrl] = longUrl;
-
-    res.redirect("/urls");
+  }
+  else if (userObject) {
+    const tempObj = {};
+    tempObj[shortUrl] = longUrl;
+    urlDatabase[userObject.id] = tempObj;
+    console.log(urlDatabase);
   } else {
     res.redirect("/urls/register");
   };
+  res.redirect("/urls");
 });
 
 
