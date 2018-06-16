@@ -10,6 +10,9 @@ TinyApp is a full stack web app built using Node and Express that allows users t
 ### Add a custom URL to be shortened!
 ![add a url](https://i.imgur.com/lPW06O5.png?1)
 
+### Manage your URLs!
+![manage URLs](https://i.imgur.com/HbRGuy2.png?1)
+
 ### Share your short links!
 ![redirects to another page](https://i.imgur.com/tOnjl87.jpg)
 
