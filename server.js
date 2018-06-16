@@ -225,7 +225,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   req.session = null;
-  res.redirect("urls");
+  res.redirect("/");
 });
 
 app.get("/register", (req, res) => {
